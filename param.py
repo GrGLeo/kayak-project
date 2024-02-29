@@ -1,3 +1,5 @@
+from data_models import WeatherTable, HotelsTable
+
 cities = ['Mont Saint Michel',
 'St Malo',
 'Bayeux',
@@ -33,3 +35,6 @@ cities = ['Mont Saint Michel',
 'Biarritz',
 'Bayonne',
 'La Rochelle']
+
+tables = {'weather': WeatherTable(),
+          'hotels': HotelsTable()}

@@ -1,7 +1,8 @@
 import threading
 from scraper import Crawler, HotelSpider
 from caller import WeatherCall
-from param import cities
+from etl import Kayak
+from param import cities, tables
 
 
 def get_weather_data():
@@ -21,4 +22,6 @@ def get_all_data():
     thread2.join()
 
 if __name__ == '__main__':
-    get_all_data()
+    # get_all_data()
+    data = Kayak(tables)
+    print(data.weather_df.head())

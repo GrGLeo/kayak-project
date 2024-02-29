@@ -57,7 +57,6 @@ class HotelSpider(scrapy.Spider):
             dict: A dictionary containing hotel information.
         """
         name = response.css('h2.d2fee87262.pp-header__title::text').get()
-        name = name.encode('utf-8').decode('unicode_escape')
         rating = response.css('p.review_score_value::text').get()
         description = response.css('a.big_review_score_detailed div.aaee4e7cd3::text').get()
         reviews = response.css('a.big_review_score_detailed div.abf093bdfe::text').get()
