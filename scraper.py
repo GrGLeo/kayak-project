@@ -87,9 +87,9 @@ class Crawler():
     def __init__(self, Spider: Type[scrapy.Spider], cities: list, filename: str):
         self.spider = Spider
         self.cities = cities
+        self.filename = filename
         self.aws = AwsInstance()
         self._crawl_booking(filename)
-        self.aws.push_to_s3(filename)
 
     def _crawl_booking(self, filename: str):
         """

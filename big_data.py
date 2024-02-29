@@ -35,7 +35,11 @@ class AwsInstance(boto3.Session):
 
 
     def push_to_s3(self, filepath:str) -> None:
-        'Push '
+        """
+        Uploads a file to an AWS S3 bucket and logs the upload.\n
+        Args:
+            filepath (str): The local filepath of the file to be uploaded.
+        """
         bucket = self.s3.Bucket(self.bucket_name)
         # get name for s3
         uploaded_file = filepath.split('.')
@@ -48,10 +52,8 @@ class AwsInstance(boto3.Session):
             with open('s3_files.log', 'a', encoding='UTF-8') as file:
                 file.write(uploaded_file)
                 file.write('\n')
-            os.remove(filepath)
         except Exception as e:
             print(e)
-            os.remove(filepath)
 
     def load_from_s3(self, last_uploaded: str, directory: str) -> None:
         """
@@ -62,7 +64,7 @@ class AwsInstance(boto3.Session):
         """
         bucket = self.s3.Bucket(self.bucket_name)
         dir_ = os.path.join('data', directory)
-        local_filepath = os.path.join(dir_, local_filepath)
+        local_filepath = os.path.join(dir_, last_uploaded)
         if not os.path.exists(dir_):
             os.makedirs(dir_)
             print(f"Directory '{dir_}' created.")
