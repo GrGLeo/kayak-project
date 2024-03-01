@@ -41,12 +41,15 @@ class Kayak:
         weather['sunset'] = pd.to_datetime(weather['sunset'], unit='s')
         weather['dt_partition'] = datetime.date.today().strftime('%Y-%m-%d')
         weather.to_sql('weather', con=self.engine)
-        print(f'Inserted {weather.shape[0]} in Hotels table')
+        print(f'Inserted {weather.shape[0]} in Weather table')
         return weather
     
     def transform_hotels(self):
         hotels = pd.read_json('bookings_hotels.json')
         hotels['reviews'] = hotels['reviews'].apply(lambda x: int(''.join(x.split(' ')[:-2])))
+        hotels['lat'] = hotels['coordinates'].apply(lambda x: x.split(',')[0]).astype(float)
+        hotels['lon'] = hotels['coordinates'].apply(lambda x: x.split(',')[1]).astype(float)
+        hotels['rating'] = hotels['rating'].str.replace(',', '.').astype(float)
         hotels['dt_partition'] = datetime.date.today().strftime('%Y-%m-%d')
         hotels.to_sql('hotels', con=self.engine)
         print(f'Inserted {hotels.shape[0]} in Hotels table')
