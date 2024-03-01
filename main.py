@@ -22,6 +22,6 @@ def get_all_data():
     thread2.join()
 
 if __name__ == '__main__':
-    # get_all_data()
+    get_all_data()
     data = Kayak(tables)
     print(data.weather_df.head())

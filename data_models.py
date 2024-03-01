@@ -11,11 +11,19 @@ class HotelsTable(Base):
 
     name = Column(String, primary_key=True)
     city = Column(String)
-    rating = Column(String)
+    rating = Column(Float)
     description = Column(String)
     reviews = Column(Integer)
-    coordinates = Column(String)
     url = Column(String)
+    personnel = Column(Float) 
+    equipments = Column(Float)
+    property = Column(Float)
+    comfort = Column(Float)
+    value = Column(Float)
+    location = Column(Float)
+    wifi = Column(Float)
+    lat = Column(Float)
+    lon = Column(Float)
     dt_partition = Column(String, primary_key=True)
 
 
@@ -31,8 +39,8 @@ class WeatherTable(Base):
     feels_like = Column(Float)
     sunrise = Column(DateTime)
     sunset = Column(DateTime)
-    dt_text = Column(DateTime)
-    daylight = Column(Time)
+    dt_text = Column(DateTime, primary_key=True)
+    daylight = Column(Integer)
     dt_partition = Column(String, primary_key=True)
     
     
