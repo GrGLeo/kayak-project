@@ -57,14 +57,17 @@ class HotelSpider(scrapy.Spider):
             dict: A dictionary containing hotel information.
         """
         name = response.css('h2.d2fee87262.pp-header__title::text').get()
-        name = name.encode('utf-8').decode('unicode_escape')
         rating = response.css('p.review_score_value::text').get()
         description = response.css('a.big_review_score_detailed div.aaee4e7cd3::text').get()
         reviews = response.css('a.big_review_score_detailed div.abf093bdfe::text').get()
         coordinates = response.css('a#hotel_sidebar_static_map::attr(data-atlas-latlng)').get()
         url = response.meta.get('url')
         city = response.meta.get('city')
+    
+        
+        review_elements = response.css('div[data-testid="review-subscore"]')
 
+        special_rate = {review.css('span.be887614c2::text').get(): review.css('div.ccb65902b2.efcd70b4c4::text').get() for review in review_elements}
         yield {
             'name': name,
             'city': city,
@@ -72,7 +75,8 @@ class HotelSpider(scrapy.Spider):
             'description': description,
             'reviews': reviews,
             'coordinates': coordinates,
-            'url': url
+            'url': url,
+            **special_rate
         }
 
 
@@ -87,9 +91,9 @@ class Crawler():
     def __init__(self, Spider: Type[scrapy.Spider], cities: list, filename: str):
         self.spider = Spider
         self.cities = cities
+        self.filename = filename
         self.aws = AwsInstance()
         self._crawl_booking(filename)
-        self.aws.push_to_s3(filename)
 
     def _crawl_booking(self, filename: str):
         """
