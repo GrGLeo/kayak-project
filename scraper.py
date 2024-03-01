@@ -63,7 +63,11 @@ class HotelSpider(scrapy.Spider):
         coordinates = response.css('a#hotel_sidebar_static_map::attr(data-atlas-latlng)').get()
         url = response.meta.get('url')
         city = response.meta.get('city')
+    
+        
+        review_elements = response.css('div[data-testid="review-subscore"]')
 
+        special_rate = {review.css('span.be887614c2::text').get(): review.css('div.ccb65902b2.efcd70b4c4::text').get() for review in review_elements}
         yield {
             'name': name,
             'city': city,
@@ -71,7 +75,8 @@ class HotelSpider(scrapy.Spider):
             'description': description,
             'reviews': reviews,
             'coordinates': coordinates,
-            'url': url
+            'url': url,
+            **special_rate
         }
 
 
