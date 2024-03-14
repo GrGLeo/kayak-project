@@ -31,7 +31,6 @@ class WeatherCall:
             raise Exception
 
     def _get_weather(self, city, lat, lon):
-        logging.info(f'Starting call for {city}')
         url = f'https://api.openweathermap.org/data/2.5/forecast?'
         params ={
             'lat':lat,
