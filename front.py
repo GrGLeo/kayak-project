@@ -3,6 +3,7 @@ import datetime
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import folium
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
@@ -27,15 +28,29 @@ navigation = st.sidebar.radio("Navigation", ['Home', 'Weather', 'Hotels informat
 
 if navigation == 'Hotels information':
     st.markdown(center_text('Hotels information', 'h2'), unsafe_allow_html=True)
+    df = hotels.groupby('city').agg({'reviews':'mean','lat':'mean','lon':'mean'})
+
+    map_center = [hotels['lat'].mean(), hotels['lon'].mean()]
+    mymap = folium.Map(location=map_center, zoom_start=6)
+
+    for i, row in hotels.iterrows():
+        popup = row['url'] + '\n' + 'rating: ' + str(row['rating'])
+        folium.Marker([row['lat'], row['lon']],popup=popup).add_to(mymap)
+    st_folium(mymap)
+
+    mymap
 
 if navigation == 'Weather':
     st.markdown(center_text('Weather Information', 'h2'), unsafe_allow_html=True)
-    col1, col2 = st.columns([2, 1])
+    
+    selected_date = st.date_input("Select a date")
+
+    col1, col2 = st.columns([1, 1])
     
     with col1:
 
         # Get today's date
-        today_date = datetime.datetime.now().strftime('%Y-%m-%d')
+        today_date = selected_date.strftime('%Y-%m-%d')
         
         today_weather = weather[weather['dt_partition'] == today_date]
         today_weather_grouped = today_weather.groupby('city', as_index=False).agg({'temps':'mean', 'feels_like':'mean','lat':'first','lon':'first'})
@@ -50,10 +65,18 @@ if navigation == 'Weather':
         # Display the map
         st.plotly_chart(fig)
     
-        with col2:
-            selected_city = st.selectbox("Choose a city", sorted(today_weather['city'].unique()))
-            
-            st.text(f'Here is the weather for {selected_city} over the next five days:')
-            filtered_df = today_weather[today_weather['city'] == selected_city]
-            filtered_df = filtered_df.drop(['sunrise','sunset','lat','lon','dt_partition'], axis=1)
-            st.write(filtered_df)
+    with col2:
+        selected_city = st.selectbox("Choose a city", sorted(today_weather['city'].unique()))
+        
+        st.text(f'Here is the weather for {selected_city} over the next five days:')
+        filtered_df = today_weather[today_weather['city'] == selected_city]
+        filtered_df = filtered_df.drop(['sunrise','sunset','lat','lon','dt_partition'], axis=1)
+        st.write(filtered_df)
+        
+        fig = px.line(filtered_df, x='dt_text', y=['temps', 'feels_like'])
+        fig.update_layout(
+            title='Temperature forecast',
+            yaxis_title='Temperature °C',
+            xaxis_title=None
+        )
+        st.plotly_chart(fig)
