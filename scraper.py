@@ -7,41 +7,41 @@ from big_data import AwsInstance
 
 
 class HotelSpider(scrapy.Spider):
-    """
+    '''
     A spider for scraping hotel information from booking.com.\n
     Attributes:
         name (str): The name of the spider.
-    """
+    '''
     name='hotelspider'
 
     def __init__(self, cities):
-        """
+        '''
         Initializes the HotelSpider class.\n
         Args:
             cities (list): A list of cities to scrape hotel information for.
-        """
+        '''
         super().__init__()
         self.cities = cities
 
     def start_requests(self):
-        """
+        '''
         Generates initial requests for each city.\n
         Yields:
             scrapy.Request: The request to scrape hotel data.
-        """
+        '''
         for city in self.cities:
             city = city.replace(' ','-')
             url = f'https://www.booking.com/city/fr/{city}.fr.html'
             yield scrapy.Request(url=url, callback=self.parse, meta={'city':city})
 
     def parse(self, response):
-        """
+        '''
         Parses the response and extracts hotel links.\n
         Args:
             response (scrapy.http.Response): The response from the initial request.\n
         Yields:
             scrapy.Request: The request to scrape hotel details.
-        """
+        '''
         hrefs = response.xpath('//div[@class="c6666c448e"]/a/@href').getall()
         city = response.meta.get('city')
         for href in hrefs:
@@ -49,13 +49,13 @@ class HotelSpider(scrapy.Spider):
 
 
     def parse_hotel_details(self, response):
-        """
+        '''
         Parses the hotel details page and extracts relevant information.\n
         Args:
             response (scrapy.http.Response): The response from the hotel details page.\n
         Yields:
             dict: A dictionary containing hotel information.
-        """
+        '''
         name = response.css('h2.d2fee87262.pp-header__title::text').get()
         rating = response.css('p.review_score_value::text').get()
         description = response.css('a.big_review_score_detailed div.aaee4e7cd3::text').get()
@@ -81,12 +81,12 @@ class HotelSpider(scrapy.Spider):
 
 
 class Crawler():
-    """
+    '''
     A class for initiating a crawling process to scrape hotel information and save it to AWS S3.\n
     Attributes:
         spider: An instance of the spider used for crawling.
         aws (AwsInstance): An instance of the AwsInstance class.
-    """
+    '''
 
     def __init__(self, Spider: Type[scrapy.Spider], cities: list, filename: str):
         self.spider = Spider
@@ -96,13 +96,13 @@ class Crawler():
         self._crawl_booking(filename)
 
     def _crawl_booking(self, filename: str):
-        """
+        '''
         Initiates a crawling process to scrape hotel information and save it to a file.\n
         Args:
             filename (str): The name of the file to save the scraped data.\n
         Returns:
             None
-        """
+        '''
         process = CrawlerProcess(settings={
             'USER_AGENT': 'Mozilla/5.0',
             'LOG_LEVEL': logging.INFO,
@@ -115,13 +115,13 @@ class Crawler():
         process.start()
 
     def load_cloud_files(self, mode: str='latest') -> None:
-        """
+        '''
         Downloads files from an Amazon S3 bucket to a local directory.\n
         Args:
             mode (str, optional): The mode of downloading. Defaults to 'latest'.\n
                 - 'latest': Downloads only the latest uploaded file.
                 - 'all': Downloads all files uploaded to the bucket.
-        """
+        '''
         dir_ = 'hotels'
         if mode == 'latest':
             with open('s3_files.log', 'r', encoding='UTF-8') as file:
