@@ -58,7 +58,8 @@ class HotelSpider(scrapy.Spider):
         '''
         name = response.css('h2.d2fee87262.pp-header__title::text').get()
         rating = response.css('p.review_score_value::text').get()
-        description = response.css('a.big_review_score_detailed div.aaee4e7cd3::text').get()
+        description = response.xpath('/html/body/div[3]/div/div[5]/div[1]/div[1]/div[3]/div/div/div[1]/div[1]/div[1]/div[1]/div[2]/div/p/text()').get()
+        
         reviews = response.css('a.big_review_score_detailed div.abf093bdfe::text').get()
         coordinates = response.css('a#hotel_sidebar_static_map::attr(data-atlas-latlng)').get()
         url = response.meta.get('url')
