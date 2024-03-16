@@ -16,7 +16,14 @@ class WeatherCall:
         self.aws = AwsInstance()
         self.weather = self.get_cities_weather()
 
-    def _get_geo(self, city):
+    def _get_geo(self, city: str):
+        '''
+        Retrieves the latitude and longitude coordinates of a city using the Nominatim API.\n
+        Args:
+            city (str): Name of the city.
+        Returns:
+            tuple: A tuple containing latitude and longitude coordinates of the city.
+        '''
         url = 'https://nominatim.openstreetmap.org/search?'
         params = {
             'city': city,
@@ -30,7 +37,16 @@ class WeatherCall:
         else:
             raise Exception
 
-    def _get_weather(self, city, lat, lon):
+    def _get_weather(self, city: str, lat: float, lon: float):
+        '''
+        Retrieves weather information for a city using the OpenWeatherMap API.\n
+        Args:
+            city (str): Name of the city.
+            lat (float): Latitude coordinate of the city.
+            lon (float): Longitude coordinate of the city.
+        Returns:
+            list: List containing weather information for the specified city.
+        '''
         url = f'https://api.openweathermap.org/data/2.5/forecast?'
         params ={
             'lat':lat,
@@ -58,6 +74,11 @@ class WeatherCall:
         return weather
 
     def get_cities_weather(self):
+        '''
+        Retrieves weather information for all specified cities.\n
+        Returns:
+            list: List containing weather information for all specified cities.
+        '''
         logging.info('Starting Weather API calls')
         geocode = geocode = {city: self._get_geo(city) for city in self.cities}
         weather = []
@@ -66,6 +87,9 @@ class WeatherCall:
         return weather
 
     def to_s3(self):
+        '''
+        Stores weather information into a JSON file and uploads it to AWS S3.
+        '''
         file_path = 'weather.json'
         with open(file_path, "w") as json_file:
             json.dump(self.weather, json_file, indent=4)
