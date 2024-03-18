@@ -25,6 +25,20 @@ st.markdown(center_text('Kayak Hotels Reservation', 'h1'), unsafe_allow_html=Tru
 
 navigation = st.sidebar.radio("Navigation", ['Home', 'Weather', 'Hotels information'])
 
+if navigation == 'Home':
+    description = '''
+
+    Explore hotel ratings, popularity, and attributes across various cities. The dashboard provides insights into average ratings, popularity,
+    and hotel amenities to help you make informed decisions when planning your trip.
+
+    Navigate through different sections using the sidebar. Select cities and hotels to view detailed information. Discover rating distributions,
+    popularity, and hotel attributes through interactive visualizations.
+
+    Start your journey with Kayak Hotels Reservation and plan your next trip with ease!
+    '''
+
+    st.markdown(description)
+
 if navigation == 'Hotels information':
         
     col1, col2 = st.columns([1, 1])
@@ -75,12 +89,16 @@ if navigation == 'Hotels information':
     selected_hotel = selected_city[selected_city['name'] == hotel]
     selected_hotel_latest = selected_hotel[selected_hotel['dt_partition'] == selected_hotel['dt_partition'].max()]
     
-    pivot_hotel = selected_hotel_latest.drop(['name','description','url','dt_partition','lat','lon','reviews','city'], axis=1)
-    pivot_hotel = pivot_hotel.T
-    pivot_hotel.rename({pivot_hotel.columns[0]: 'hotel'}, axis=1, inplace=True)
-    fig = px.bar(pivot_hotel, x=pivot_hotel.index, y='hotel')
-    st.plotly_chart(fig)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        pivot_hotel = selected_hotel_latest.drop(['name','description','url','dt_partition','lat','lon','reviews','city'], axis=1)
+        pivot_hotel = pivot_hotel.T
+        pivot_hotel.rename({pivot_hotel.columns[0]: 'hotel'}, axis=1, inplace=True)
+        fig = px.bar(pivot_hotel, x=pivot_hotel.index, y='hotel')
+        st.plotly_chart(fig)
     
+    with col2:
+        st.markdown(f"<div style='font-size: 16px; white-space: pre-line;'>{selected_hotel_latest['description'].iloc[0]}</div>", unsafe_allow_html=True)
     
 if navigation == 'Weather':
     st.markdown(center_text('Weather Information', 'h2'), unsafe_allow_html=True)

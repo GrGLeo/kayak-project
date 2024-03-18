@@ -1,3 +1,4 @@
+import os
 import threading
 from scraper import Crawler, HotelSpider
 from caller import WeatherCall
@@ -23,4 +24,5 @@ def get_all_data():
 
 if __name__ == '__main__':
     get_all_data()
+    os.system('clear')
     data = Kayak(tables)
