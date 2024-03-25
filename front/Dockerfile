@@ -5,7 +5,7 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY front.py .
+COPY . .
 
 EXPOSE 8501
 
