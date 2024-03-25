@@ -10,9 +10,11 @@ def get_weather_data():
     weather = WeatherCall(cities)
     weather.to_s3()
 
+
 def get_hotels_data():
-    crawl = Crawler(HotelSpider, cities, 'bookings_hotels.json')
+    crawl = Crawler(HotelSpider, cities, "bookings_hotels.json")
     crawl.aws.push_to_s3(crawl.filename)
+
 
 def get_all_data():
     thread1 = threading.Thread(target=get_weather_data)
@@ -22,7 +24,9 @@ def get_all_data():
     thread1.join()
     thread2.join()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     get_all_data()
-    os.system('clear')
+    os.system("clear")
     data = Kayak(tables)
+

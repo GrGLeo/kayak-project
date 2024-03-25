@@ -1,10 +1,9 @@
 import os
-import requests
 import json
 import logging
+import requests
 from dotenv import load_dotenv
 from big_data import AwsInstance
-from param import cities
 
 load_dotenv()
 
@@ -32,10 +31,9 @@ class WeatherCall:
         response = requests.get(url, params=params)
         if response.status_code == 200:
             content = response.json()
-            lat,lon = content[0]['lat'], content[0]['lon']
+            lat, lon = content[0]['lat'], content[0]['lon']
             return (lat, lon)
-        else:
-            raise Exception
+        raise Exception
 
     def _get_weather(self, city: str, lat: float, lon: float):
         '''
@@ -47,9 +45,9 @@ class WeatherCall:
         Returns:
             list: List containing weather information for the specified city.
         '''
-        url = f'https://api.openweathermap.org/data/2.5/forecast?'
-        params ={
-            'lat':lat,
+        url = 'https://api.openweathermap.org/data/2.5/forecast?'
+        params = {
+            'lat': lat,
             'lon': lon,
             'appid': self.apikey,
             'units': 'metric'
@@ -61,7 +59,7 @@ class WeatherCall:
         sunset = content['city']['sunset']
         weather = []
         for i, id in enumerate(content['list']):
-            if i%8 == 0:
+            if i % 8 == 0:
                 weather.append({
                     'city': city,
                     'weather': id['weather'][0]['main'],
@@ -82,7 +80,7 @@ class WeatherCall:
         logging.info('Starting Weather API calls')
         geocode = geocode = {city: self._get_geo(city) for city in self.cities}
         weather = []
-        for k,v in geocode.items():
+        for k, v in geocode.items():
             weather.extend(self._get_weather(k, v[0], v[1]))
         return weather
 
@@ -91,7 +89,7 @@ class WeatherCall:
         Stores weather information into a JSON file and uploads it to AWS S3.
         '''
         file_path = 'weather.json'
-        with open(file_path, "w") as json_file:
+        with open(file_path, "w", encoding='utf-8') as json_file:
             json.dump(self.weather, json_file, indent=4)
 
         self.aws.push_to_s3('weather.json')
