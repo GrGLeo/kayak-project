@@ -85,4 +85,5 @@ class Kayak:
         hotels.to_sql("hotels", con=self.engine,
                       if_exists="append", index=False)
         print(f"Inserted {hotels.shape[0]} in Hotels table")
+        os.remove("bookings_hotels.json")
         return hotels

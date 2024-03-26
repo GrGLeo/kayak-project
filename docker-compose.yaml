@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  kayak-front:
+    build: ./front
+    ports:
+      - "80:80"
+    networks:
+      - kayak-network
+
+  kayak-back:
+    build: ./back
+    networks:
+      - kayak-network
+
+  postgres:
+    image: postgres:latest
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kayak-project
+      POSTGRES_USER: lg 
+      POSTGRES_PASSWORD: glopglop 
+    networks:
+      - kayak-network
+
+networks:
+  kayak-network:
+
+volumes:
+  pgdata:

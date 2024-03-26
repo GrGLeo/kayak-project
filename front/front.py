@@ -83,15 +83,13 @@ if navigation == "Hotels information":
         )
         st.plotly_chart(fig)
 
-        mean_city_note = hotels[
-            ["personnel", "property", "comfort", "value", "location", "wifi"]
-        ].mean(axis=0)
-        fig = px.pie(
-            mean_city_note,
-            values=mean_city_note.values,
-            names=mean_city_note.index,
-            title="Mean Values of Hotel Attributes",
-        )
+        rating_over_time = hotels.groupby('dt_partition', as_index=False).agg({'rating': 'mean','lat': 'mean','lon': 'mean'})
+        fig = px.line(rating_over_time, x='dt_partition', y='rating')
+        fig.update_layout(
+                    title='Evolution of rating over time',
+                    yaxis_title='Average rating',
+                    xaxis_title=None
+                )
         st.plotly_chart(fig)
 
     city = st.selectbox("Choose a city", sorted(hotels["city"].unique()))
