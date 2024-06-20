@@ -6,6 +6,7 @@ A Streamlit application to explore hotel and weather across various cities in Fr
 The Kayak Hotels Reservation project consists of a frontend built with Streamlit and a backend that handles data scraping and processing. The application fetches hotel and weather data from a PostgreSQL database and presents it using various interactive visualizations.
 
 ## Tree
+```
 .
 ├── back                                
 │   ├── big_data.py             <-- Class for AWS communication
@@ -26,6 +27,7 @@ The Kayak Hotels Reservation project consists of a frontend built with Streamlit
 │   ├── front.py                <-- Streamlit front app
 │   └── requirements.txt        <-- All dependencies listed for frontend
 └── template.env                <-- Template with empty needed env variable
+```
 
 ## Installation
 ### Prerequisites
