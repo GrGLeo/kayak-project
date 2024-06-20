@@ -36,7 +36,7 @@ docker compose up --build
 
 ## Usage
 The application consist of a frontend and a backend.
-![Full system architecture](diag.png)
+![Full system architecture](kayak_project_3.png)
 
 ### Backend Process
 1. **Data Scraping**:
