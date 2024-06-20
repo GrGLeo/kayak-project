@@ -5,6 +5,28 @@ A Streamlit application to explore hotel and weather across various cities in Fr
 ## Description
 The Kayak Hotels Reservation project consists of a frontend built with Streamlit and a backend that handles data scraping and processing. The application fetches hotel and weather data from a PostgreSQL database and presents it using various interactive visualizations.
 
+## Tree
+.
+├── back                                
+│   ├── big_data.py             <-- Class for AWS communication
+│   ├── caller.py               <-- Script to make API call
+│   ├── cronjob                 <-- Orchestration automatique script run
+│   ├── data_models.py          <-- Postgresql Table definition
+│   ├── Dockerfile
+│   ├── etl.py                  <-- Script for all ETL process
+│   ├── main.py                 <-- Main script launched every day
+│   ├── param.py                <-- Various params variable
+│   ├── requirements.txt        <-- All dependencies listed fron backend
+│   ├── s3_files.log            <-- Logs with all files pushed to s3
+│   ├── scraper.py              <-- Script to scrape Bookings
+│   └── tester.py               <-- Testing script for scraping
+├── docker-compose.yaml
+├── front
+│   ├── Dockerfile
+│   ├── front.py                <-- Streamlit front app
+│   └── requirements.txt        <-- All dependencies listed for frontend
+└── template.env                <-- Template with empty needed env variable
+
 ## Installation
 ### Prerequisites
 - Python 3.10+
@@ -14,7 +36,7 @@ The Kayak Hotels Reservation project consists of a frontend built with Streamlit
 ### Steps
 1. Clone repository:  
 ```bash
-git clone
+git clone git@github.com:GrGLeo/kayak-project.git
 cd kayak_project
 ```
 2. Set up the environment variables:  
